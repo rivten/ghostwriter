@@ -82,6 +82,12 @@ signals:
     void characterCountChanged(int value);
 
     /**
+     * Emitted when word count changes.  The value is
+     * always the word count of the entire document.
+     */
+    void totalCharacterCountChanged(int value);
+
+    /**
      * Emitted when paragraph count changes.
      */
     void paragraphCountChanged(int value);

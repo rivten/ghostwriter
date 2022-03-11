@@ -29,6 +29,7 @@ static QString sentenceCountText(int value) { return StatisticsIndicator::tr("%L
 static QString paragraphCountText(int value) { return StatisticsIndicator::tr("%Ln paragraph(s)", "", value); }
 static QString pageCountText(int value) { return StatisticsIndicator::tr("%Ln page(s)", "", value); }
 static QString wordsAddedText(int value) { return StatisticsIndicator::tr("%Ln word(s) added", "", value); }
+static QString charactersAddedText(int value) { return StatisticsIndicator::tr("%Ln character(s) added", "", value); }
 static QString wpmText(int value) { return StatisticsIndicator::tr("%Ln wpm", "", value); }
 static QString readTimeText(int minutes) { return StatisticsIndicator::tr("%1:%2 read time")
                                                         .arg((int) (minutes / 60), 2, 10, QChar('0'))
@@ -156,6 +157,21 @@ StatisticsIndicator::StatisticsIndicator(DocumentStatistics *documentStats,
         [this, index](int value) {
             this->setItemText(index,
                 wordsAddedText(value));
+
+            if (index == this->currentIndex()) {
+                this->setMinimumContentsLength(this->itemText(index).length());
+            }
+        });
+    index++;
+
+    this->addItem(charactersAddedText(0));
+    this->setItemData(index, Qt::AlignCenter, Qt::TextAlignmentRole);
+    this->connect(sessionStats,
+        &SessionStatistics::characterCountChanged,
+        this,
+        [this, index](int value) {
+            this->setItemText(index,
+                charactersAddedText(value));
 
             if (index == this->currentIndex()) {
                 this->setMinimumContentsLength(this->itemText(index).length());

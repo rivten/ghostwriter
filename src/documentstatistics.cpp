@@ -256,6 +256,7 @@ void DocumentStatisticsPrivate::updateStatistics()
     emit q->wordCountChanged(wordCount);
     emit q->totalWordCountChanged(wordCount);
     emit q->characterCountChanged(document->characterCount() - 1);
+    emit q->totalCharacterCountChanged(document->characterCount() - 1);
     emit q->sentenceCountChanged(sentenceCount);
     emit q->paragraphCountChanged(paragraphCount);
     emit q->pageCountChanged(pageCount);

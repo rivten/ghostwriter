@@ -281,7 +281,7 @@ MainWindow::MainWindow(const QString &filePath, QWidget *parent)
         documentManager,
         &DocumentManager::documentLoaded,
         [this]() {
-            this->sessionStats->startNewSession(this->documentStats->wordCount());
+            this->sessionStats->startNewSession(this->documentStats->wordCount(), this->documentStats->characterCount());
             refreshRecentFiles();
         }
     );
@@ -291,7 +291,7 @@ MainWindow::MainWindow(const QString &filePath, QWidget *parent)
         documentManager,
         &DocumentManager::documentClosed,
         [this]() {
-            this->sessionStats->startNewSession(0);
+            this->sessionStats->startNewSession(0, 0);
         }
     );
 
@@ -1375,6 +1375,7 @@ void MainWindow::buildSidebar()
 
     sessionStats = new SessionStatistics(this);
     connect(documentStats, SIGNAL(totalWordCountChanged(int)), sessionStats, SLOT(onDocumentWordCountChanged(int)));
+    connect(documentStats, SIGNAL(totalCharacterCountChanged(int)), sessionStats, SLOT(onDocumentCharacterCountChanged(int)));
     connect(sessionStats, SIGNAL(wordCountChanged(int)), sessionStatsWidget, SLOT(setWordCount(int)));
     connect(sessionStats, SIGNAL(pageCountChanged(int)), sessionStatsWidget, SLOT(setPageCount(int)));
     connect(sessionStats, SIGNAL(wordsPerMinuteChanged(int)), sessionStatsWidget, SLOT(setWordsPerMinute(int)));

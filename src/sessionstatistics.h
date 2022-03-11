@@ -53,6 +53,11 @@ signals:
     void wordCountChanged(int value);
 
     /**
+     * Emitted when character count changes.
+     */
+    void characterCountChanged(int value);
+
+    /**
      * Emitted when page count changes.
      */
     void pageCountChanged(int value);
@@ -77,9 +82,10 @@ public slots:
     /**
      * Resets statistics for a new writing session.
      */
-    void startNewSession(int lastWordCount = 0);
+    void startNewSession(int lastWordCount = 0, int lastCharacterCount = 0);
 
     void onDocumentWordCountChanged(int newWordCount);
+    void onDocumentCharacterCountChanged(int newCharacterCount);
     void onTypingPaused();
     void onTypingResumed();
 
@@ -90,6 +96,9 @@ private:
     int sessionWordCount;
     int totalWordsWritten;
     int lastWordCount;
+    int sessionCharacterCount;
+    int totalCharactersWritten;
+    int lastCharacterCount;
     QTimer *sessionTimer;
     bool idle;
     unsigned long totalSeconds;

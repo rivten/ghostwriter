@@ -31,7 +31,7 @@ SessionStatistics::SessionStatistics(QObject *parent)
     sessionTimer->setInterval(1000);
     idle = true;
 
-    startNewSession(0);
+    startNewSession(0, 0);
 }
 
 SessionStatistics::~SessionStatistics()
@@ -44,11 +44,14 @@ int SessionStatistics::wordCount() const
     return sessionWordCount;
 }
 
-void SessionStatistics::startNewSession(int initialWordCount)
+void SessionStatistics::startNewSession(int initialWordCount, int initialCharacterCount)
 {
     sessionWordCount = 0;
     totalWordsWritten = 0;
     lastWordCount = initialWordCount;
+    sessionCharacterCount = 0;
+    totalCharactersWritten = 0;
+    lastCharacterCount = initialCharacterCount;
     totalSeconds = 0;
     idleSeconds = 0;
     idle = true;
@@ -56,6 +59,7 @@ void SessionStatistics::startNewSession(int initialWordCount)
     sessionTimer->start();
 
     emit wordCountChanged(0);
+    emit characterCountChanged(0);
     emit pageCountChanged(0);
     emit wordsPerMinuteChanged(0);
     emit writingTimeChanged(0);
@@ -79,6 +83,24 @@ void SessionStatistics::onDocumentWordCountChanged(int newWordCount)
 
     emit wordCountChanged(sessionWordCount);
     emit pageCountChanged(sessionWordCount / 250);
+}
+
+void SessionStatistics::onDocumentCharacterCountChanged(int newCharacterCount)
+{
+    int deltaCharacters = newCharacterCount - lastCharacterCount;
+
+    if (deltaCharacters > 0) {
+        totalCharactersWritten += deltaCharacters;
+    }
+
+    sessionCharacterCount += deltaCharacters;
+    lastCharacterCount = newCharacterCount;
+
+    if (sessionCharacterCount < 0) {
+        sessionCharacterCount = 0;
+    }
+
+    emit characterCountChanged(sessionCharacterCount);
 }
 
 void SessionStatistics::onTypingPaused()
